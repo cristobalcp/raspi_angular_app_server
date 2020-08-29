@@ -1,0 +1,30 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.User = void 0;
+const mongoose_1 = require("mongoose");
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const userSchema = new mongoose_1.Schema({
+    name: {
+        type: String,
+        unique: true,
+        required: [true, "El nombre es obligatorio"]
+    },
+    password: {
+        type: String,
+        unique: true,
+        required: [true, "El password es obligatorio"]
+    },
+});
+userSchema.method('checkPassword', function (password = '') {
+    // Encrypted password comparission
+    if (bcryptjs_1.default.compareSync(password, this.password)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+});
+exports.User = mongoose_1.model('user', userSchema);
